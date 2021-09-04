@@ -1,0 +1,37 @@
+{% load blog_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <link href="{% static "css/main.css" %}" rel="stylesheet">
+        {% block style %}{% endblock %}
+    </head>
+    <body>
+        <div id="header"></div>
+        <div id="content" style="text-align: right;">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div id="sidebar">
+            <h2>بلاگ من</h2>
+            <div id="home-btn">
+                <a href="{% url "post:post-list" %}">صفحه اصلی</a>
+            </div>
+            <p> پست به بلاگ اضافه شده است. {% total_posts_tag %}تا کنون </p>
+            <a href="{% url 'post:post_feed' %}">subscribe blog feed</a>
+            <h2>آخرین پست ها</h2>
+            <p>{% show_latest_posts 4 %}</p>
+            <h2>پست های با بیشترین نظر</h2>
+            {% most_commented_posts 3 as mc_posts %}
+            <ul>
+                {% for post in mc_posts %}
+                    <li>
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>

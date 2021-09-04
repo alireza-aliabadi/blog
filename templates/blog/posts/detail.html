@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load blog_tags %}
+{% block title %}
+    {{ detail.title }}
+{% endblock %}
+{% block content %}
+    <h1>{{ detail.title }}</h1>
+    <p class="tags">{{ detail.tags.all | join:" | " }}</p>
+    <p class="date">منتشر شده {{ detail.publish }} توسط {{ detail.author }}</p>
+    <p>{{ detail.text|markdown }}</p>
+    <p>
+        <a href="{% url "post:post_share" detail.id %}">اشتراک گذاری</a>
+    </p>
+    <h3>پست های مشابه</h3>
+    {% for similar_post in similar_posts %}
+        <p><a href="{{ similar_post.get_absolute_url }}">{{ similar_post.title }}</a></p>
+    {% empty %}
+        <p>پست مشابه ای نیست</p>
+    {% endfor %}
+    {% with comments.count as total_comments %}
+        <h2>{{ total_comments }} نظر{{ total_comments | fa_plural }}</h2>
+    {% endwith %}
+    {% for comment in comments %}
+        <div class="comment">
+            <p class="info">
+                نظر {{ forloop.counter }} ثبت شده توسط {{ comment.name }}<br>
+                {{ comment.created_at }}
+            </p>
+            {{ comment.text|linebreaks }}
+        </div>
+    {% empty %}
+        <p>هیچ نظری ثبت نشده است</p>
+    {% endfor %}
+    {% if new_comment %}
+        <h2>نظر شما با موفقیت ثبت شد</h2>
+    {% else %}
+        <form method="post" novalidate class="forms">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <input type="submit" value="Add comment">
+        </form>
+    {% endif %}
+{% endblock %}

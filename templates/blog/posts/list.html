@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load blog_tags %}
+{% block title %}
+    Post list
+{% endblock %}
+{% block content %}
+    <h1>بلاگ من</h1>
+    {% if tag %}
+        <h3>{{ tag.name }}پست های با تگ </h3>
+    {% endif %}
+    {% for post in posts %}
+        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+        <p class="tags">
+            تگ ها:
+            {% for tag in post.tags.all %}
+                <a href="{% url "post:post-list-by-tag" tag.slug %}">{{ tag.name }}</a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p class="date">منتشر شده {{ post.publish }} توسط {{ post.author }}</p>
+        <p>{{ post.text|markdown|truncatewords:30 }}</p>
+    {% endfor %}
+    {% include "blog/pagination.html" with page=posts %}
+{#    {{ pages_range }}#}
+{#    {% include "blog/pagination.html" with page=page_obj %}#}
+{% endblock %}

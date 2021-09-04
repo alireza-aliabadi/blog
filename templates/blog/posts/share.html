@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}Share Post {{ post.id }}{% endblock %}
+{% block style %}<link href="{% static "css/content.css" %}" rel="stylesheet">{% endblock %}
+{% block content %}
+    {% if sent %}
+        <h1>ایمیل با موفقیت ارسال شد</h1>
+        <p>
+            {{ post.title }} به ارسال شد {{ form.cleaned_data.to }}.
+        </p>
+    {% else %}
+        <h1>اشتراک گذاری {{ post.title }}</h1>
+        <form method="post" novalidate class="forms">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <div>
+                    {{ field.errors }}
+                </div>
+                <div>{{ field.label_tag }} {{ field }}</div>
+            {% endfor %}
+            <input type="submit" value="send email">
+        </form>
+    {% endif %}
+{% endblock %}

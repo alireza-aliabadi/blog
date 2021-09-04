@@ -1,0 +1,21 @@
+.forms{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+#home-btn{
+    margin-top: 20px;
+    padding: 8px;
+    width: fit-content;
+    background-color: blueviolet;
+    border-radius: 4px;
+}
+#home-btn > a{
+    color: white;
+}
+label{
+    width: fit-content;
+    align-content: center;
+}
