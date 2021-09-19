@@ -1,12 +1,13 @@
 {% extends "base/base.html" %}
 {% load blog_tags %}
+{% load jformat %}
 {% block title %}
     {{ detail.title }}
 {% endblock %}
 {% block content %}
     <h1>{{ detail.title }}</h1>
     <p class="tags">{{ detail.tags.all | join:" | " }}</p>
-    <p class="date">منتشر شده {{ detail.publish }} توسط {{ detail.author }}</p>
+    <p class="date">منتشر شده {{ detail.publish|jformat:"%A %d %B %Y %H:%M" }} توسط {{ detail.author }}</p>
     <p>{{ detail.text|markdown }}</p>
     <p>
         <a href="{% url "post:post_share" detail.id %}">اشتراک گذاری</a>

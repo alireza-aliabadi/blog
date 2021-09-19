@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load blog_tags %}
+
+{% block title %}صفحه جستجو{% endblock %}
+{% block content %}
+    {% if query %}
+        <h2>پست هایی شامل {{ query }}</h2>
+        <h4>
+            {% with result.count as search_results %}
+                تعداد{{ search_results }} پست {{ search_results|fa_plural }}پیدا شد
+            {% endwith %}
+        </h4>
+        {% for post in result %}
+            <h5><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h5>
+            <p>{{ post.text|markdown|truncatechars_html:300 }}</p>
+        {% empty %}
+            <p>پستی پیدا نشد</p>
+        {% endfor %}
+        <p><a href="{% url "post:post_search" %}">جستجوی دوباره</a></p>
+    {% else %}
+        <h3>جستجو</h3>
+        <form method="get">
+            {{ form.as_p }}
+            <input type="submit" value="جستجو">
+        </form>
+    {% endif %}
+{% endblock %}

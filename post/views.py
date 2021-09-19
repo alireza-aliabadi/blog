@@ -2,10 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.generic import ListView
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector
+from .searching_methods import regular_search, stemming_ranking, weighting, trigram_search
 
 
 # Create your views here.
@@ -75,3 +77,23 @@ def post_share(request, post_id):
             send_mail(subject, message, "alirezara98@gmail.com", [data['to'], ])
             sent = True
     return render(request, 'blog/posts/share.html', {'post': post, 'form': form, 'sent': sent})
+
+
+def search_view(request):
+    form = SearchForm()
+    query = None
+    result = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            obj = Post.published.all()
+            # ---regular search---
+            result = regular_search(obj, query)
+            # ---stemming and ranking search
+            # result = stemming_ranking(obj, query)
+            # ---weighting query---
+            # result = weighting(obj, query)
+            # ---search by trigram---
+            # result = trigram_search(obj, query)
+    return render(request, 'blog/posts/search.html', {'form': form, 'query': query, 'result': result})

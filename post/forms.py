@@ -25,3 +25,7 @@ class CommentForm(forms.ModelForm):
             "email": _("ایمیل"),
             "text": _("متن")
         }
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=100)
